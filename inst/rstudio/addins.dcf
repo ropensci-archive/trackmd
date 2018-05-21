@@ -1,0 +1,4 @@
+Name: Add
+Description: Tracks addition at cursor position
+Binding: add
+Interactive: false
