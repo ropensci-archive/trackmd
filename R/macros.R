@@ -10,3 +10,18 @@ add <- function() {
   docPosNew <- docPos + c(0, 4)
   rstudioapi::setCursorPosition(docPosNew, id = con$id)
 }
+
+#' Tracking a deletion
+#'
+#' Call this function as an addin to delete highlighted text.
+#'
+#' @export
+delete <- function() {
+  con <- rstudioapi::getActiveDocumentContext()
+  startPos <- con$selection[[1]]$range$start
+  endPos <- con$selection[[1]]$range$end
+  rstudioapi::insertText(location = startPos, "{-- ", id = con$id)
+  rstudioapi::insertText(location = endPos + c(0,4), " --}", id = con$id)
+  startPosNew <- endPos + c(0, 8)
+  rstudioapi::setCursorPosition(startPosNew, id = con$id)
+}

@@ -2,3 +2,8 @@ Name: Add
 Description: Tracks addition at cursor position
 Binding: add
 Interactive: false
+
+Name: Delete
+Description: Marks highlighted text for deletion
+Binding: delete
+Interactive: false
