@@ -2,3 +2,13 @@ Name: Add
 Description: Tracks addition at cursor position
 Binding: add
 Interactive: false
+
+Name: Substitute
+Description: Tracks substitution at cursor position
+Binding: substitute
+Interactive: false
+
+Name: Highlight
+Description: Tracks highlighting at cursor position
+Binding: highlight
+Interactive: false
