@@ -6,8 +6,8 @@ public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus
 trackmd
 =======
 
-RStudio addin for tracking {<sub><sub>changes</sub>&gt;new</sub>~} in
-Markdown format. Inspired by [Critic Markup](http://criticmarkup.com/).
+RStudio addin for tracking changes in Markdown format. Inspired by
+[Critic Markup](http://criticmarkup.com/).
 
 Created at the RopenSci unconference. [Original
 Issue](https://github.com/ropensci/unconf18/issues/76)
