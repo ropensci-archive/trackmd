@@ -1,24 +1,24 @@
 Name: Add
 Description: Tracks addition at cursor position
-Binding: add
+Binding: trackAdd
 Interactive: false
 
 Name: Substitute
 Description: Tracks substitution at cursor position
-Binding: substitute
+Binding: trackSubstitute
 Interactive: false
 
 Name: Highlight
 Description: Tracks highlighting at cursor position
-Binding: highlight
+Binding: trackHighlight
 Interactive: false
 
 Name: Delete
 Description: Marks highlighted text for deletion
-Binding: delete
+Binding: trackDelete
 Interactive: false
 
 Name: Comment
 Description: Inserts comment at cursor position
-Binding: comment
+Binding: trackComment
 Interactive: false
