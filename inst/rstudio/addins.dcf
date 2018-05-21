@@ -12,3 +12,13 @@ Name: Highlight
 Description: Tracks highlighting at cursor position
 Binding: highlight
 Interactive: false
+
+Name: Delete
+Description: Marks highlighted text for deletion
+Binding: delete
+Interactive: false
+
+Name: Comment
+Description: Inserts comment at cursor position
+Binding: comment
+Interactive: false
