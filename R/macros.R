@@ -30,7 +30,8 @@ trackSubstitute <- function() {
 
   # Add markup
   docPos <- con$selection[[1]]$range$end
-  rstudioapi::insertText(paste0("{~~", selection, "~>~~}"), id = con$id)
+  rstudioapi::insertText(paste0("{~~", selection, "~>~~}"),
+    id = con$id)
 
   # Move cursor
   docPosNew <- docPos + c(0, 5)
@@ -51,7 +52,8 @@ trackHighlight <- function() {
 
   # Add markup
   docPos <- con$selection[[1]]$range$end
-  rstudioapi::insertText(paste0("{==", selection, "==}{>><<}"), id = con$id)
+  rstudioapi::insertText(paste0("{==", selection, "==}{>><<}"),
+    id = con$id)
 
   # Move cursor
   docPosNew <- docPos + c(0, 9)
@@ -74,7 +76,8 @@ trackDelete <- function() {
 
   # Add markup
   rstudioapi::insertText(location = startPos, "{--", id = con$id)
-  rstudioapi::insertText(location = endPos + c(0,3), "--}", id = con$id)
+  rstudioapi::insertText(location = endPos + c(0, 3), "--}",
+    id = con$id)
 
   # move cursor
   startPosNew <- endPos + c(0, 6)
