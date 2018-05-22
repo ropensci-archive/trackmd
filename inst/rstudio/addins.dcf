@@ -22,3 +22,8 @@ Name: Comment
 Description: Inserts comment at cursor position
 Binding: trackComment
 Interactive: false
+
+Name: Track Changes
+Description: Shiny UI for editing, tracking changes, and rendering .Rmds
+Binding: trackChangesViewer
+Interactive: true
