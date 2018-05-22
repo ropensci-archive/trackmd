@@ -11,18 +11,18 @@
 #' @keywords internal
 diff_to_markup <- function(before, after, style = "critic") {
   
-  # # Decide which diff formatting functions to use
-  # if (style == "critic") {
-  #   addFunc <- criticAdd
-  #   delFunc <- criticDel
-  #   subFunc <- criticSub
-  # } else if (style == "pandoc") {
-  #   addFunc <- pandocAdd
-  #   delFunc <- pandocDel
-  #   subFunc <- pandocSub
-  # } else {
-  #   stop('Invlaid style "', style, '" entered.')
-  # }
+  # Decide which diff formatting functions to use
+  if (style == "critic") {
+    addFunc <- criticAdd
+    delFunc <- criticDel
+    subFunc <- criticSub
+  } else if (style == "pandoc") {
+    addFunc <- pandocAdd
+    delFunc <- pandocDel
+    subFunc <- pandocSub
+  } else {
+    stop('Invlaid style "', style, '" entered.')
+  }
   
   # Convert string to characters
   before <- unlist(strsplit(before, split = ""))
@@ -32,47 +32,27 @@ diff_to_markup <- function(before, after, style = "critic") {
   difference <- diffobj::ses(before, after)
 
   apply_addition <- function(text, index, afterStart, afterEnd) {
-    io1 <- index+offset + 1
-    res <- c(text[1:(index + offset)], "{", "+", "+", after[afterStart:afterEnd], "+", "+", "}",
-                   text[io1:length(text)])
-    if (io1 > length(text)){
-      res <- c(text[1:(index + offset)],
-        "{", "+", "+", after[afterStart:afterEnd], "+", "+", "}")
-    }
-    return(res)
+    c(text[seq_len(index)],
+      addFunc(after[afterStart:afterEnd]),
+      text[index + seq_len(length(text) - index)])
   }
 
   apply_deletion <- function(text, beforeStart, beforeEnd) {
-    bo1 <- beforeEnd + offset + 1
-    res <- c(text[1:(beforeStart - 1 + offset)],
-             "{", "-", "-", before[beforeStart:beforeEnd], "-", "-", "}",
-             text[bo1:length(text)])
-    if (bo1 > length(text)){
-      res <- c(text[1:(beforeStart - 1 + offset)],
-        "{", "-", "-", before[beforeStart:beforeEnd], "-", "-", "}")
-    }
-    return(res)
+    c(text[seq_len(beforeStart - 1)],
+      delFunc(before[beforeStart:beforeEnd]),
+      text[beforeEnd + seq_len(length(text) - beforeEnd)])
   }
 
   apply_change <- function(text, beforeStart, beforeEnd, afterStart, afterEnd) {
-    bo1 <- beforeEnd + offset + 1
-    res <- c(text[1:(beforeStart - 1 + offset)],
-             "{", "~", "~", before[beforeStart:beforeEnd], "~", ">", after[afterStart:afterEnd], "~", "~", "}",
-             text[bo1:length(text)])
-    if (bo1 > length(text)){
-      res <- c(text[1:(beforeStart - 1 + offset)],
-        "{", "~", "~", before[beforeStart:beforeEnd], "~", ">", after[afterStart:afterEnd], "~", "~", "}")
-    }
-    return(res)
+    c(text[seq_len(beforeStart - 1)],
+      subFunc(before[beforeStart:beforeEnd], after[afterStart:afterEnd]),
+      text[beforeEnd + seq_len(length(text) - beforeEnd)])
   }
 
   text <- before
-  offset <- 0
-  for (aDiff in difference) {
-    length_before <- length(text)
+  for (aDiff in rev(difference)) {
     sesValues <- getSesValues(aDiff)
     if (sesValues$type == "a") {
-      #browser()
       text <- apply_addition(text,
                              sesValues$beforeStart,
                              sesValues$afterStart,
@@ -88,7 +68,6 @@ diff_to_markup <- function(before, after, style = "critic") {
                            sesValues$afterStart,
                            sesValues$afterEnd)
     }
-    offset <- offset  + length(text) - length_before
   }
 
   # Convert bact to single string
