@@ -72,6 +72,9 @@ applyChanges <- function(origPath, newPath){
   diff <- diff_to_markup(old, new)
 
   readr::write_file(diff, path = origPath)
+
+  # delete temp file
+  unlink(tmpfilePath, recursive = T)
 }
 
 checkTmpPath <- function(tmpfilePath){

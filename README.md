@@ -11,3 +11,17 @@ RStudio addin for tracking changes in Markdown format. Inspired by
 
 Created at the RopenSci unconference. [Original
 Issue](https://github.com/ropensci/unconf18/issues/76)
+
+Main feature: `trackmd::trackChanges()`
+=======================================
+
+![](trackchanges.gif)
+
+Future
+======
+
+-   \[ \] "Smarter" coloring: word by word instead of character by
+    character?
+-   \[ \] Addins to turn track changes on and off
+-   \[ \] Accept / reject changes
+-   Communicate with track changes and comments in .docx files
