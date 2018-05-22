@@ -6,11 +6,11 @@
 trackChangesViewer <- function() {
 
   # necessary paths
-  tmp <- file.path(tempdir(),"trackmd")
-  dir.create(tmp, showWarnings = FALSE)
-  tmpfle <- tempfile(tmpdir = tmp, fileext = ".html")
-  readr::write_file(x = "here is some html", path = tmpfle)
-  shiny::addResourcePath("trackmd", tmp)
+  # tmp <- file.path(tempdir(),"trackmd")
+  # dir.create(tmp, showWarnings = FALSE)
+  # tmpfle <- tempfile(tmpdir = tmp, fileext = ".html")
+  # readr::write_file(x = "here is some html", path = tmpfle)
+  # shiny::addResourcePath("trackmd", tmp)
 
   # Get the document context.
   context <- rstudioapi::getSourceEditorContext()
@@ -21,42 +21,42 @@ trackChangesViewer <- function() {
   ui <- miniPage(
     # includeHighlightJs(),
     # title
-    gadgetTitleBar("Track Changes"),
+    gadgetTitleBar("Record Additions & Deletions"),
 
     miniContentPanel(
       h4("Inspired by ", cmLink, " for tracking changes in Markdown."),
       hr(),
-      miniTabstripPanel(
+#      miniTabstripPanel(
         # edit panel
-        miniTabPanel( title = "Edit",
-          fluidRow(
+#        miniTabPanel( title = "Edit",
+#          fluidRow(
 
-            # render the markup as html
-            column(6,
-              includeHTML(tmpfle)
-            ),
+            # # render the markup as html
+            # column(6,
+            #   includeHTML(tmpfle)
+            # ),
 
             # editor for marking up
-            column(6,
-              shinyAce::aceEditor("editor", value = paste(doc, collapse = "\n"))
+#            column(6,
+          shinyAce::aceEditor("editor", value = paste(doc, collapse = "\n"))
               #uiOutput("document", container = rCodeContainer)
-            )
-          )
-        ),
+#            )
+#          )
+#        ),
 
-        # review panel
-        miniTabPanel(title = "Review",
-            fluidRow(
-                column(8,
-                  includeHTML(tmpfle)
-                       ),
-                column(3,
-                  actionButton("next", "Next"))
-            )
+        # # review panel
+        # miniTabPanel(title = "Review",
+        #     fluidRow(
+        #         column(8,
+        #           includeHTML(tmpfle)
+        #                ),
+        #         column(3,
+        #           actionButton("next", "Next"))
+        #     )
+        #
+        # )
 
-        )
-
-      )
+#      )
       # stableColumnLayout(
       #   checkboxInput("brace.newline", "Place left braces '{' on a new line?", FALSE),
       #   numericInput("indent", "Indent size: ", 2),
@@ -76,13 +76,15 @@ trackChangesViewer <- function() {
 
     observeEvent(input$done, {
       contents <- input$editor
-      rstudioapi::setDocumentContents(contents, id = context$id)
+      aftr <- paste0(contents, collapse = "\n")
+      markedup <- trackmd:::diff_to_markup(paste0(doc, collapse = "\n"), aftr)
+      rstudioapi::setDocumentContents(markedup, id = context$id)
       invisible(stopApp())
     })
 
   }
 
-  viewer <- dialogViewer("Track Changes", width = 1000, height = 800)
+  viewer <- dialogViewer("Record Changes", width = 1000, height = 800)
   runGadget(ui, server, viewer = viewer)
 
 }

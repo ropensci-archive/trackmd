@@ -23,7 +23,7 @@ Description: Inserts comment at cursor position
 Binding: trackComment
 Interactive: false
 
-Name: Track Changes
-Description: Shiny UI for editing, tracking changes, and rendering .Rmds
+Name: Record Changes
+Description: Shiny UI for editing, and recording text changes in the markup trackmd format.
 Binding: trackChangesViewer
 Interactive: true
