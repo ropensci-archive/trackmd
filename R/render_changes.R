@@ -25,15 +25,15 @@ render_changes <- function(text = NULL, file = NULL, ...) {
   }
   
   # Replace additions markup
-  text <- gsub(text, pattern = "\\{\\+\\+(.*)\\+\\+\\}",
+  text <- gsub(text, pattern = "\\{\\+\\+(.*?)\\+\\+\\}",
                replacement = render_html_add("\\1"))
-  text <- gsub(text, pattern = "\\{--(.*)--\\}",
+  text <- gsub(text, pattern = "\\{--(.*?)--\\}",
                replacement = render_html_delete("\\1"))
-  text <- gsub(text, pattern = "\\{~~(.*)~>(.*)~~\\}",
+  text <- gsub(text, pattern = "\\{~~(.*?)~>(.*?)~~\\}",
                replacement = render_html_substitution("\\1", "\\2"))
-  text <- gsub(text, pattern = "\\{==(.*)==\\}\\{>>(.*)<<\\}",
+  text <- gsub(text, pattern = "\\{==(.*?)==\\}\\{>>(.*?)<<\\}",
                replacement = render_html_highlight("\\1", "\\2"))
-  text <- gsub(text, pattern = "\\{>>(.*)<<\\}",
+  text <- gsub(text, pattern = "\\{>>(.*?)<<\\}",
                replacement = render_html_comment("\\1"))
   
   # Convert to html
