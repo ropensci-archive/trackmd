@@ -4,9 +4,26 @@
 #' 
 #' @param before (\code{character} of length 1) The text before the changes.
 #' @param after (\code{character} of length 1) The text after the changes.
+#' @param style (\code{character} of length 1) The type of change tags to add.
+#'   Either "critic" for Critical Markdown tags, or "pandoc" for the track
+#'   change tags used by pandoc.
 #' 
 #' @keywords internal
-diff_to_markup <- function(before, after) {
+diff_to_markup <- function(before, after, style = "critic") {
+  
+  # Decide which diff formatting functions to use
+  if (style == "critic") {
+    addFunc <- criticAdd
+    delFunc <- criticDel
+    subFunc <- criticSub
+  } else if (style == "pandoc") {
+    addFunc <- pandocAdd
+    delFunc <- pandocDel
+    subFunc <- pandocSub
+  } else {
+    stop('Invlaid style "', style, '" entered.')
+  }
+  
   # Convert string to characters
   before <- unlist(strsplit(before, split = ""))
   after <- unlist(strsplit(after, split = ""))
@@ -16,19 +33,19 @@ diff_to_markup <- function(before, after) {
   
   apply_addition <- function(text, index, afterStart, afterEnd) {
     c(text[1:(index + offset)],
-      "{", "+", "+", after[afterStart:afterEnd], "+", "+", "}",
+      addFunc(after[afterStart:afterEnd]),
       text[(index + 1 + offset):length(text)])
   }
   
   apply_deletion <- function(text, beforeStart, beforeEnd) {
     c(text[1:(beforeStart - 1 + offset)],
-      "{", "-", "-", before[beforeStart:beforeEnd], "-", "-", "}",
+      delFunc(before[beforeStart:beforeEnd]),
       text[(beforeEnd + 1 + offset):length(text)])
   }
 
   apply_change <- function(text, beforeStart, beforeEnd, afterStart, afterEnd) {
     c(text[1:(beforeStart - 1 + offset)],
-      "{", "~", "~", before[beforeStart:beforeEnd], "~", ">", after[afterStart:afterEnd], "~", "~", "}",
+      subFunc(before[beforeStart:beforeEnd], after[afterStart:afterEnd]),
       text[(beforeEnd + 1 + offset):length(text)])
   }
   
@@ -77,7 +94,7 @@ getSesValues <- function(sesText) {
   if (matches$beforeEnd == "") {
     matches$beforeEnd <- matches$beforeStart
   }
-  if (matches[4] == "") {
+  if (matches$afterEnd == "") {
     matches$afterEnd <- matches$afterStart
   }
   
@@ -88,4 +105,37 @@ getSesValues <- function(sesText) {
   matches$afterStart <- as.numeric(matches$afterStart)
   
   return(matches)
+}
+
+
+#' @keywords internal
+criticAdd <- function(text) {
+  paste0("{++", paste0(text, collapse = ""), "++}")
+}
+
+#' @keywords internal
+criticDel <- function(text) {
+  paste0("{--", paste0(text, collapse = ""), "--}")
+}
+
+#' @keywords internal
+criticSub <- function(from, to) {
+  paste0("{~~", paste0(from, collapse = ""), "~>", paste0(to, collapse = ""), "~~}")
+}
+
+
+#' @keywords internal
+pandocAdd <- function(text, author = "unknown", timestamp = lubridate::date()) {
+  paste0('<span class="insertion" author="', author, '" date="', timestamp, '">', paste0(text, collapse = ""), '</span>')
+}
+
+#' @keywords internal
+pandocDel <- function(text, author = "unknown", timestamp = lubridate::date()) {
+  paste0('<span class="deletion" author="', author, '" date="', timestamp, '">', paste0(text, collapse = ""), '</span>')
+}
+
+#' @keywords internal
+pandocSub <- function(from, to, author = "unknown", timestamp = lubridate::date()) {
+  paste0(pandocDel(from, author = author, timestamp = timestamp),
+         pandocAdd(from, author = author, timestamp = timestamp))
 }

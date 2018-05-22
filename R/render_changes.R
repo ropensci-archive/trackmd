@@ -6,7 +6,7 @@
 #'   one value per line). Either `text` or `file` must be used, but not both.
 #' @param file The file containing the markdown to be rendered. Either `text` or
 #'   `file` must be used, but not both.
-#' @param ... Passed to \code{\link[rmarkdown]{render}}
+#' @inheritDotParams rmarkdown::render
 #'   
 #' @keywords internal
 render_changes <- function(text = NULL, file = NULL, ...) {
@@ -40,7 +40,7 @@ render_changes <- function(text = NULL, file = NULL, ...) {
   temp_input <- tempfile()
   on.exit(file.remove(temp_input))
   readr::write_file(text, path = temp_input)
-  rmarkdown::render(temp_input, rmarkdown::html_fragment(), ...)
+  rmarkdown::render(temp_input, rmarkdown::html_document(), ...)
 }
 
 

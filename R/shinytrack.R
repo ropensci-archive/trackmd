@@ -86,3 +86,16 @@ trackChangesViewer <- function() {
   runGadget(ui, server, viewer = viewer)
 
 }
+
+
+#' Make an R script to render changes
+#' 
+#' Makes an R script to convert markdown with critic markup to an HTML with track changes.
+#' 
+#' @param siteDir The directory to save the script in.
+#' 
+#' @keywords internal
+makeBuildScript <- function(siteDir) {
+  readr::write_file("trackmd:::render_changes(file = commandArgs()[1], output = commandArgs()[2])",
+                    path = file.path(siteDir, "build.R"))
+}
