@@ -13,7 +13,8 @@ Imports:
     rstudioapi (>= 0.4),
     shiny (>= 0.13),
     miniUI (>= 0.1.1),
-    shinyAce (>= 0.3.1)
+    shinyAce (>= 0.3.1), 
+    readr
 License: MIT
 LazyData: true
 RoxygenNote: 6.0.1
